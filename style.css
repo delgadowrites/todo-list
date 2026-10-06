@@ -12,3 +12,31 @@ body {
   background-color: var(--color-bg);
   color: var(--color-accent-2);
 }
+
+#task-input {
+  font-family: inherit;
+  background-color: var(--color-bg-2);
+  color: var(--color-text);
+  border: 2px solid var(--color-accent);
+  padding: 6px;
+  font-size: 12px;
+}
+
+#add-button {
+  font-family: inherit;
+  background-color: var(--color-bg-2);
+  color: var(--color-text);
+  border: 2px solid var(--color-accent);
+  padding: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#add-button:hover {
+  background-color: var(--color-accent);
+  color: var(--color-bg-2);
+}
+
+#add-button:active {
+  transform: translate(2px, 2px);
+}
