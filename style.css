@@ -1,0 +1,14 @@
+:root {
+  --color-bg: #656565;
+  --color-text: #bbbbbb;
+  --color-accent: #ffbf83;
+  --color-accent-2: #00ffff;
+  --color-accent-3: #bf00ff;
+  --color-bg-2: #360072;
+}
+
+body {
+  font-family: "Press Start 2P", monospace;
+  background-color: var(--color-bg);
+  color: var(--color-accent-2);
+}
