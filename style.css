@@ -40,3 +40,25 @@ body {
 #add-button:active {
   transform: translate(2px, 2px);
 }
+
+#task-list {
+  list-style-type: none;
+  margin-top: 32px;
+}
+
+.task {
+  background-color: var(--color-bg-2);
+  color: var(--color-accent-2);
+  margin: 6px;
+  border: 2px solid var(--color-accent);
+  padding: 6px;
+  font-size: 12px;
+}
+
+/* .task:
+   - background color: --color-bg-2
+   - text color: --color-accent-2
+   - border (thickness, color): 6px to start, color --color-accent
+   - padding (space inside the box): 6px to start
+   - space between one task and the next: 6px to start
+*/
