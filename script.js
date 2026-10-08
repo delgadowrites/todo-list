@@ -14,9 +14,12 @@ taskForm.addEventListener("submit", (event) => {
   // CHANGE 2: copy the text the user typed
   const taskText = taskInput.value;
 
-  // Guard: if the text is only spaces, stop the callback here (nothing below runs)
+  // Guard: if the text is only spaces, clear text input then stop the callback here (nothing below runs)
   // (A completely empty box never gets this far: "required" in the HTML blocks it)
-  if (taskText.trim() === "") return;
+  if (taskText.trim() === "") {
+    taskInput.value = "";
+    return;
+  }
 
   // CHANGE 3: create a brand-new <li> and give it the "task" class (connects it to the .task CSS)
   const newTask = document.createElement("li");
