@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-10-08
+
+### Added
+- Form submit listener in `script.js`: typing a task and clicking Add (or pressing Enter) adds it to the list
+- New tasks are created as `<li class="task">`, so they get the task styling
+- Text box clears after each task is added
+- Guard against spaces-only input: nothing is added, and the box is cleared
+- Comments above each part of `script.js` explaining what it does
+
+### Changed
+- Page no longer reloads when the form is submitted (`event.preventDefault()`)
+
+### Fixed
+- New tasks had no styling in the practice version: the class was `task-item` instead of `task`
+
+### Removed
+- Temporary test task (`<li class="task">Test task</li>`) from `index.html`
+
 ## 2026-10-06
 
 ### Added
