@@ -55,10 +55,6 @@ body {
   font-size: 12px;
 }
 
-/* .task:
-   - background color: --color-bg-2
-   - text color: --color-accent-2
-   - border (thickness, color): 6px to start, color --color-accent
-   - padding (space inside the box): 6px to start
-   - space between one task and the next: 6px to start
-*/
+.completed {
+  text-decoration: line-through var(--color-accent-3) 3px;
+}
