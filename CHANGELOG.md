@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-10
+
+### Added
+- Click a task to cross it out; click again to un-cross it
+- One click listener on `#task-list` handles every task, including ones added later (event delegation)
+- Guard: clicks on the list's empty space are ignored
+- `.completed` style: a 3px line through the text in `--color-accent-3`
+- Temporary `console.log(event.target)` for debugging (remove before shipping)
+
+### Fixed
+- Crossed-out tasks couldn't be un-crossed: the "add completed" line ran on every click. Moved it into an `else` block.
+
 ## 2026-10-08
 
 ### Added
