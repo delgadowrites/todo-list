@@ -58,3 +58,23 @@ body {
 .completed {
   text-decoration: line-through var(--color-accent-3) 3px;
 }
+
+.delete-button {
+  font-family: inherit;
+  background-color: var(--color-accent);
+  color: var(--color-bg-2);
+  border: 2px solid var(--color-bg-2);
+  padding: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: var(--color-bg-2);
+  color: var(--color-accent-2);
+  border: 2px solid var(--color-accent);
+}
+
+.delete-button:active {
+  transform: translate(2px, 2px);
+}

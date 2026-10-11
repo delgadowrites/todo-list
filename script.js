@@ -1,60 +1,35 @@
 console.log("JavaScript is connected!");
 
-// SELECT: grab the 3 elements JavaScript needs and store each in a labeled box
-const taskInput = document.querySelector("#task-input"); // the text box (where the task text starts)
-const taskForm = document.querySelector("#task-form");   // the form (fires "submit" on click or Enter)
-const taskList = document.querySelector("#task-list");   // the list (where new tasks end up)
+const taskInput = document.querySelector("#task-input");
+const taskForm = document.querySelector("#task-form");
+const taskList = document.querySelector("#task-list");
 
-// LISTEN: when the form submits, the browser runs this callback
-// and fills the "event" parameter with details about the submit
 taskForm.addEventListener("submit", (event) => {
-  // CHANGE 1: stop the browser's default reload, so the new task isn't wiped
   event.preventDefault();
-
-  // CHANGE 2: copy the text the user typed
   const taskText = taskInput.value;
-
-  // Guard: if the text is only spaces, clear text input then stop the callback here (nothing below runs)
-  // (A completely empty box never gets this far: "required" in the HTML blocks it)
   if (taskText.trim() === "") {
     taskInput.value = "";
     return;
   }
 
-  // CHANGE 3: create a brand-new <li> and give it the "task" class (connects it to the .task CSS)
   const newTask = document.createElement("li");
   newTask.classList.add("task");
-
-  // CHANGE 4: put the text inside the new <li>
   newTask.textContent = taskText;
-
-  // CHANGE 5: add the finished <li> to the list, so it appears on the page
   taskList.appendChild(newTask);
-
-  // CHANGE 6: clear the text box for the next task
+  const deleteButton = document.createElement("button");
+  deleteButton.classList.add("delete-button");
+  deleteButton.textContent = "delete";
+  newTask.appendChild(deleteButton);
   taskInput.value = "";
 });
 
-
-// LISTEN: one listener on the list catches clicks on every task, old or new,
-// because each click bubbles up from the task to #task-list (event delegation)
 taskList.addEventListener("click", (event) => {
-  // DEBUG (temporary): print the clicked element to the Console, so I can see what was clicked.
-  // Remove before shipping.
-  console.log(event.target);
-
-  // CHANGE 1–2: event.target = the exact element that was clicked.
-  // Guard: if it is NOT a task (e.g., the list's empty space), stop here.
-  if (!event.target.classList.contains("task")) {
-    return;
-  }
-
-  // CHANGE 3–5: toggle. Exactly one of these two blocks runs per click.
-  if (event.target.classList.contains("completed")) {
-    // Already crossed out → un-cross it
-    event.target.classList.remove("completed");
+  if (event.target.classList.contains("delete-button")) {
+    const parent = event.target.parentElement;
+    parent.remove();
+  } else if (event.target.classList.contains("task")) {
+    event.target.classList.toggle("completed");
   } else {
-    // Not crossed out → cross it out
-    event.target.classList.add("completed");
+    return;
   }
 });
