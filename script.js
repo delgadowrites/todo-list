@@ -14,8 +14,20 @@ taskForm.addEventListener("submit", (event) => {
 
   const newTask = document.createElement("li");
   newTask.classList.add("task");
-  newTask.textContent = taskText;
+  // newTask.textContent = taskText; (replaced)
+
+  // create a new wrapper
+  const spanWrapper = document.createElement("span");
+  spanWrapper.classList.add("task-text"); // assign class
+
+  // put the task text inside the span
+  spanWrapper.textContent = taskText;
+  // move the span into new task
+  newTask.appendChild(spanWrapper);
+  // move new task into task list
   taskList.appendChild(newTask);
+
+
   const deleteButton = document.createElement("button");
   deleteButton.classList.add("delete-button");
   deleteButton.textContent = "delete";
@@ -24,11 +36,13 @@ taskForm.addEventListener("submit", (event) => {
 });
 
 taskList.addEventListener("click", (event) => {
+  console.log(event.target);
   if (event.target.classList.contains("delete-button")) {
     const parent = event.target.parentElement;
     parent.remove();
-  } else if (event.target.classList.contains("task")) {
-    event.target.classList.toggle("completed");
+  } else if (event.target.classList.contains("task-text")) {
+    event.target.parentElement.classList.toggle("completed");
+    console.log(event.target.parentElement);
   } else {
     return;
   }

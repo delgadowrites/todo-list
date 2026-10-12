@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-10-11
+
+### Added
+- A delete button inside every task; clicking it removes only that task
+- The task list's click listener now handles two kinds of clicks: delete button → remove the task; task → toggle crossed out
+- Comments for the delete-button code and the click listener's three branches
+- Delete button styling (`.delete-button`): pixel font and palette colors
+
+### Changed
+- Toggle now uses `classList.toggle("completed")` (one line instead of if/else)
+
+### Fixed
+- Toggle broke with "targetElement is not defined" (a name copied from an example) and then "newTask is not defined" (a box from another callback). Fixed with `event.target`.
+- Delete button did nothing: the click check looked for `"delete-task"` instead of `"delete-button"`
+
 ## 2026-10-10
 
 ### Added

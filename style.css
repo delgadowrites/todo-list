@@ -53,9 +53,18 @@ body {
   border: 2px solid var(--color-accent);
   padding: 6px;
   font-size: 12px;
+
+  display: flex;
+  /* lay out the text and button in a row */
+  align-items: center;
+  /* center them vertically */
+  justify-content: space-between;
+  /* text on the left, button pushed to the right */
+  gap: 12px;
+  /* space between long text and the button */
 }
 
-.completed {
+.completed .task-text {
   text-decoration: line-through var(--color-accent-3) 3px;
 }
 
@@ -67,6 +76,9 @@ body {
   padding: 6px;
   font-size: 12px;
   cursor: pointer;
+
+  flex-shrink: 0;
+  /* long task text can't squish the button */
 }
 
 .delete-button:hover {
