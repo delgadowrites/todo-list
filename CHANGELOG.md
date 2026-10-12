@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-10-12
+
+### Added
+- Each task's text is wrapped in its own `<span class="task-text">`
+
+### Changed
+- Delete button is positioned with flexbox: text on the left, button on the right, vertically centered (`.task`: `justify-content: space-between`, `gap`; `.delete-button`: `flex-shrink: 0`)
+- Crossed-out style now targets only the text: `.completed .task-text` (was `.completed`)
+- Toggle branch checks for `task-text` and toggles `completed` on the span's parent `<li>`
+
+### Fixed
+- Delete button jumped down when clicked: its `:active` transform replaced the centering transform. Removed absolute positioning.
+- Crossing out a task also crossed out the delete button text
+- Span never got its class: `classList.add = "task-text"` (assignment) changed to `classList.add("task-text")` (method call)
+
 ## 2026-10-11
 
 ### Added
