@@ -9,8 +9,8 @@ function buildTask(text, completed) {
   const newTask = document.createElement("li");
   newTask.classList.add("task");
   if (completed === true) {
-    newTask.classList.add("completed")
-  };
+    newTask.classList.add("completed");
+  } // forgot the semicolon which made test 5 fail
   const spanWrapper = document.createElement("span");
   spanWrapper.classList.add("task-text");
   spanWrapper.textContent = text;
