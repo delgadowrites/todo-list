@@ -17,7 +17,7 @@ function buildTask(text, completed) {
   newTask.appendChild(spanWrapper);
   const deleteButton = document.createElement("button");
   deleteButton.classList.add("delete-button");
-  deleteButton.textContent = "delete";
+  deleteButton.textContent = "complete";
   newTask.appendChild(deleteButton);
   taskList.appendChild(newTask);
 }
