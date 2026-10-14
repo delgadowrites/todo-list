@@ -3,6 +3,7 @@ console.log("JavaScript is connected!");
 const taskInput = document.querySelector("#task-input");
 const taskForm = document.querySelector("#task-form");
 const taskList = document.querySelector("#task-list");
+const tasks = [];
 
 
 function buildTask(text, completed) {
@@ -10,7 +11,7 @@ function buildTask(text, completed) {
   newTask.classList.add("task");
   if (completed === true) {
     newTask.classList.add("completed");
-  } // forgot the semicolon which made test 5 fail
+  } // no ; after a block's }
   const spanWrapper = document.createElement("span");
   spanWrapper.classList.add("task-text");
   spanWrapper.textContent = text;
@@ -30,6 +31,8 @@ taskForm.addEventListener("submit", (event) => {
     return;
   }
   buildTask(taskText, false);
+  tasks.push({ text: taskText, completed: false });
+  localStorage.setItem("tasks", JSON.stringify(tasks));
   taskInput.value = "";
 });
 

@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-10-14
+
+### Added
+- A `tasks` array that holds each task's data as `{ text, completed }`.
+- Adding a task now pushes its data into `tasks` and saves the array to `localStorage` under the key `"tasks"` (with `JSON.stringify`).
+
+### Changed
+- Task button label changed from "delete" to "complete" (it still removes the task).
+- Corrected a comment in `buildTask` about semicolons after blocks.
+
+## 2026-10-13
+
+### Changed
+- Moved the code that builds a task (li, text span, delete button) into a reusable `buildTask(text, completed)` function.
+- The submit listener now calls `buildTask(taskText, false)` instead of building the task itself.
+- `buildTask` adds the `completed` class when `completed` is `true` (prepares for loading saved tasks in Step 8).
+
 ## 2026-10-12
 
 ### Added
