@@ -5,6 +5,17 @@ const taskForm = document.querySelector("#task-form");
 const taskList = document.querySelector("#task-list");
 const tasks = [];
 
+// This loads saved tasks from localStorage
+let storedTasks = localStorage.getItem("tasks");
+// 1b. If nothing is saved (storedTasks is null), use "[]": an empty array written as text, so JSON.parse can read it.
+if (storedTasks === null) {
+  storedTasks = "[]";
+}
+const storedTasksArray = JSON.parse(storedTasks);
+for (let task of storedTasksArray) {
+  buildTask(task.text, task.completed);
+  tasks.push(task); // 5. Put this TASK into the box tasks. Not the entire array.
+}
 
 function buildTask(text, completed) {
   const newTask = document.createElement("li");

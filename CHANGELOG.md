@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-15
+
+### Added
+- Load saved tasks from localStorage when the page opens and rebuild each one with buildTask
+- First-visit guard: use "[]" when nothing is saved, so the script doesn't crash and the listeners still attach
+
+### Fixed
+- Adding a task after a refresh no longer overwrites the saved list (loaded tasks are pushed into tasks)
+
 ## 2026-10-14
 
 ### Added
