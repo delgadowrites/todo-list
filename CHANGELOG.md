@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-16
+
+### Added
+- Every task gets a unique id from crypto.randomUUID(), stored on its object (id key) and on its <li> (data-id)
+- Migration: tasks saved before ids existed get an id when they load, before they're drawn
+
 ## 2026-10-15
 
 ### Added
