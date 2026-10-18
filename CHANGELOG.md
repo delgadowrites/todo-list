@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-18
+
+### Added
+- Crossing out a task now saves: the click finds the task's object by id, flips completed, and saves
+- Deleting a task now saves: the click finds the object's index by id, removes it from tasks, and saves
+- Guards on both: if a task's id has no match, the click does nothing (no error, page and data stay in sync)
+
+### Changed
+- Renamed the delete-button class to complete-button (JS and CSS)
+- Removed plan comments from script.js
+
 ## 2026-10-16
 
 ### Added
