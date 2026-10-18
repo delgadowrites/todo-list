@@ -29,10 +29,10 @@ function buildTask(text, completed, taskId) {
   spanWrapper.classList.add("task-text");
   spanWrapper.textContent = text;
   newTask.appendChild(spanWrapper);
-  const deleteButton = document.createElement("button");
-  deleteButton.classList.add("delete-button");
-  deleteButton.textContent = "complete";
-  newTask.appendChild(deleteButton);
+  const completeButton = document.createElement("button");
+  completeButton.classList.add("complete-button");
+  completeButton.textContent = "complete";
+  newTask.appendChild(completeButton);
   taskList.appendChild(newTask);
 }
 
@@ -51,9 +51,17 @@ taskForm.addEventListener("submit", (event) => {
 });
 
 taskList.addEventListener("click", (event) => {
-  if (event.target.classList.contains("delete-button")) {
-    const parent = event.target.parentElement;
-    parent.remove();
+  if (event.target.classList.contains("complete-button")) {
+    const clickedTask = event.target.parentElement;
+    const clickedId = clickedTask.dataset.id;
+    const matchingIndex = tasks.findIndex((task) => task.id === clickedId);
+    if (matchingIndex === -1) {
+      return;
+    }
+    tasks.splice(matchingIndex, 1);
+    clickedTask.remove();
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
   } else if (event.target.classList.contains("task-text")) {
     const clickedTask = event.target.parentElement;
     const clickedId = clickedTask.dataset.id;

@@ -68,7 +68,7 @@ body {
   text-decoration: line-through var(--color-accent-3) 3px;
 }
 
-.delete-button {
+.complete-button {
   font-family: inherit;
   background-color: var(--color-accent);
   color: var(--color-bg-2);
@@ -81,12 +81,12 @@ body {
   /* long task text can't squish the button */
 }
 
-.delete-button:hover {
+.complete-button:hover {
   background-color: var(--color-bg-2);
   color: var(--color-accent-2);
   border: 2px solid var(--color-accent);
 }
 
-.delete-button:active {
+.complete-button:active {
   transform: translate(2px, 2px);
 }
