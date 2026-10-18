@@ -79,7 +79,29 @@ taskList.addEventListener("click", (event) => {
     const parent = event.target.parentElement;
     parent.remove();
   } else if (event.target.classList.contains("task-text")) {
-    event.target.parentElement.classList.toggle("completed");
+
+    // 1. Get the clicked task (<li>) → clickedTask
+    const clickedTask = event.target.parentElement;
+
+    // 2. Read clickedTask's sigil (its data-id) → clickedId
+    const clickedId = clickedTask.dataset.id;
+
+    // 3. Search tasks for the soul page whose id matches clickedId → matchingTask
+    const matchingTask = tasks.find((task) => task.id === clickedId);
+
+    // 3b. Guard: if matchingTask is undefined → stop here
+    if (matchingTask === undefined) {
+      return;
+    }
+
+    // 4. Set matchingTask's completed to the opposite of what it is now
+    matchingTask.completed = !matchingTask.completed;
+
+    // 5. Toggle the completed class on clickedTask
+    clickedTask.classList.toggle("completed");
+    // 6. Seal: save tasks to local storage
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
   } else {
     return;
   }
