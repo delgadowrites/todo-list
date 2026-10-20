@@ -32,6 +32,21 @@ for (let task of storedTasksArray) {
   tasks.push(task);
 }
 
+// ===== XP =====
+// Grabs the XP line at the bottom of the page          → box xpDisplay
+const xpDisplay = document.querySelector("#xp-display");
+// How much XP one completed quest gives                → box xpPerQuest, 15
+const xpPerQuest = 15;
+// Reads saved XP as a number (first visit gives 0)     → box xp
+let xp = Number(localStorage.getItem("xp"));
+// Shows the XP total on the page                       → call showXp
+showXp();
+
+// Writes "XP: " and the total into xpDisplay           → function showXp
+function showXp() {
+  xpDisplay.textContent = "XP: " + xp;
+}
+
 // ===== BUILD ONE TASK (<li>) ON THE PAGE =====
 // Creates a task (<li>) with its text and buttons, and adds it to the list
 function buildTask(text, completed, taskId) {
@@ -40,10 +55,7 @@ function buildTask(text, completed, taskId) {
   newTask.classList.add("task");
   // Labels the task (<li>) with its id (data-id), to match it to its object later
   newTask.dataset.id = taskId;
-  // If the task was saved as completed, adds the crossed-out style
-  if (completed === true) {
-    newTask.classList.add("completed");
-  }
+
   // add removeButton here
   const removeButton = document.createElement("button");
   removeButton.classList.add("remove-button");
@@ -123,26 +135,12 @@ taskList.addEventListener("click", (event) => {
     clickedTask.remove();
     // Saves the updated working list to localStorage
     localStorage.setItem("tasks", JSON.stringify(tasks));
-
-    // --- Clicked a task's text: crosses it out, or un-crosses it ---
-  } else if (event.target.classList.contains("task-text")) {
-    // Finds the task (<li>) the text is inside, and reads its id
-    const clickedTask = event.target.parentElement;
-    const clickedId = clickedTask.dataset.id;
-    // Finds the matching object in the working list (undefined = not found)
-    const matchingTask = tasks.find((task) => task.id === clickedId);
-    // Safety guard: no matching object, so stop without changing anything
-    if (matchingTask === undefined) {
-      return;
-    }
-    // Flips the object's completed value (true ↔ false)
-    matchingTask.completed = !matchingTask.completed;
-    // Flips the crossed-out style on the task (<li>) to match
-    clickedTask.classList.toggle("completed");
-    // Saves the updated working list to localStorage
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-
-    // --- Clicked anything else in the list (empty space, the <li> edge): does nothing ---
+    // Adds one quest's XP to the total
+    xp += xpPerQuest;
+    // Saves the total under the key "xp"
+    localStorage.setItem("xp", xp);
+    // Shows the new total on the page
+    showXp();
   } else {
     return;
   }
