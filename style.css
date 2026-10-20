@@ -45,6 +45,7 @@ body {
 #task-list {
   list-style-type: none;
   margin-top: 32px;
+  padding-left: 0;
 }
 
 .task {
