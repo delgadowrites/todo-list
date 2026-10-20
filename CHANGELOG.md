@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-20
+
+### Added
+- Red × button on every task: removes the task (page, list and saved data) without XP. Top-left corner, 44 px tap area, `aria-label="Remove task"`.
+- XP: tapping complete gives +15 XP. The total is saved in localStorage under `"xp"` and shown in a line pinned to the bottom of the screen.
+
+### Changed
+- Completing a task is one tap: complete removes the task and gives XP (Turn In + undo dropped for now).
+- Retired the cross-out: clicking a task's text does nothing; removed the `.completed` style.
+- Task layout: `min-height: 48px` and left padding to make room for the ×; removed the task list's left padding for more text room on phones.
+
+### Fixed
+- iPhone Safari zoomed in when tapping the task box: task input font size is now 16px.
+
 ## 2026-10-18
 
 ### Added
