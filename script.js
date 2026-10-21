@@ -196,10 +196,46 @@ taskList.addEventListener("click", async (event) => {
   }
 });
 
+// ===== MOVE OLD LOCALSTORAGE TASKS INTO SUPABASE (runs once per browser) =====
+async function migrateLocalTasks() {
+  // Reads tasks saved by the old version of the app (null if there are none)
+  const storedTasks = localStorage.getItem("tasks");
+  // Nothing saved: stops here
+  if (storedTasks === null) {
+    return;
+  }
+  // Turns the saved text back into an array of task objects
+  const storedTasksArray = JSON.parse(storedTasks);
+  // Empty array saved: removes the key and stops
+  if (storedTasksArray.length === 0) {
+    localStorage.removeItem("tasks");
+    return;
+  }
+  // Builds one row per old task (user_id is filled in by the database)
+  const rows = [];
+  for (let task of storedTasksArray) {
+    // Gives an id to tasks saved before ids existed
+    if (task.id === undefined) {
+      task.id = crypto.randomUUID();
+    }
+    rows.push({ id: task.id, text: task.text });
+  }
+  // Saves all the rows in one request
+  const migrateResult = await supabaseClient.from("tasks").insert(rows);
+  // If the save failed: shows the error and KEEPS localStorage (nothing is lost)
+  if (migrateResult.error !== null) {
+    console.error(migrateResult.error);
+    return;
+  }
+  // Saved: removes the old key so this never runs twice
+  localStorage.removeItem("tasks");
+}
+
 // ===== START THE APP =====
 // Signs in first, then loads tasks (a read before sign-in gives back [])
 async function startApp() {
   await signInIfNeeded();
+  await migrateLocalTasks();
   await loadTasks();
 }
 // Runs at the end of the file, so taskList, tasks and buildTask already exist
