@@ -124,7 +124,8 @@ taskForm.addEventListener("submit", async (event) => {
 });
 
 // ===== CLICKS INSIDE THE LIST (one listener for every task) =====
-taskList.addEventListener("click", (event) => {
+// async: this listener waits for the database before changing the page
+taskList.addEventListener("click", async (event) => {
   // --- Clicked a "remove" button: removes that task everywhere without granting xp ---
   if (event.target.classList.contains("remove-button")) {
     // Finds the task (<li>) the button is inside, and reads its id
@@ -136,13 +137,25 @@ taskList.addEventListener("click", (event) => {
     if (matchingIndex === -1) {
       return;
     }
+    // Blocks a second tap while the database answers
+    event.target.disabled = true;
+    // Deletes the row whose id matches this task
+    const deleteResult = await supabaseClient
+      .from("tasks")
+      .delete()
+      .eq("id", clickedId);
+    // If the delete failed: shows the error, re-enables the button, and stops
+    if (deleteResult.error !== null) {
+      console.error(deleteResult.error);
+      event.target.disabled = false;
+      return;
+    }
     // Removes that object from the working list
     tasks.splice(matchingIndex, 1);
     // Removes the task (<li>) from the page
     clickedTask.remove();
-    // Saves the updated working list to localStorage
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    // --- Clicked a "complete" button: removes that task everywhere ---
+
+    // --- Clicked a "complete" button: removes that task everywhere and grants xp ---
   } else if (event.target.classList.contains("complete-button")) {
     // Finds the task (<li>) the button is inside, and reads its id
     const clickedTask = event.target.parentElement;
@@ -153,18 +166,31 @@ taskList.addEventListener("click", (event) => {
     if (matchingIndex === -1) {
       return;
     }
+    // Blocks a second tap while the database answers (no double XP)
+    event.target.disabled = true;
+    // Deletes the row whose id matches this task
+    const deleteResult = await supabaseClient
+      .from("tasks")
+      .delete()
+      .eq("id", clickedId);
+    // If the delete failed: shows the error, re-enables the button, and stops (no XP)
+    if (deleteResult.error !== null) {
+      console.error(deleteResult.error);
+      event.target.disabled = false;
+      return;
+    }
     // Removes that object from the working list
     tasks.splice(matchingIndex, 1);
     // Removes the task (<li>) from the page
     clickedTask.remove();
-    // Saves the updated working list to localStorage
-    localStorage.setItem("tasks", JSON.stringify(tasks));
     // Adds one quest's XP to the total
     xp += xpPerQuest;
     // Saves the total under the key "xp"
     localStorage.setItem("xp", xp);
     // Shows the new total on the page
     showXp();
+
+    // --- Clicked anything else in the list: does nothing ---
   } else {
     return;
   }
