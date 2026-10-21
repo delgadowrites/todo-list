@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-10-21
+
+### Added
+- Supabase Postgres backend for tasks: `tasks` table with `id` (uuid), `user_id`, `text`, `completed`, `created_at`.
+- Row Level Security policies: each browser can read, add, update and delete only its own tasks (`user_id = auth.uid()`).
+- Anonymous sign-in: each browser gets its own user on its first visit; the session is kept across refreshes.
+- Supabase JavaScript client, loaded from the jsDelivr CDN.
+- One-time migration: tasks saved in localStorage by the old version are copied into Supabase, then removed from localStorage.
+
+### Changed
+- Tasks load from Supabase when the page opens (sign-in first, then oldest task first).
+- Adding a task saves it to Supabase before it appears on the page.
+- × and complete delete the task in Supabase before removing it from the page; complete gives XP only after the delete succeeds.
+- XP stays in localStorage.
+
+### Fixed
+- Double-tapping complete could give XP twice: the button is disabled while the database answers.
+- The `supabase-backend` branch was missing the XP commits from main: merged main into the branch.
+
 ## 2026-10-20
 
 ### Added
