@@ -10,7 +10,7 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 async function signInIfNeeded() {
   const sessionResult = await supabaseClient.auth.getSession();
   if (sessionResult.data.session === null) {
-    await supabaseClient.auth.signInAnonymously();;
+    await supabaseClient.auth.signInAnonymously();
   }
 }
 signInIfNeeded();
