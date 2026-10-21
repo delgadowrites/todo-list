@@ -6,6 +6,15 @@ const supabaseUrl = "https://cvaoxqryytupjobttubs.supabase.co";
 const supabaseKey = "sb_publishable_hDjyedrZL_mjxZ3fxdEBew_jiOAdS34";
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
+// Sign in only if this browser has no saved session
+async function signInIfNeeded() {
+  const sessionResult = await supabaseClient.auth.getSession();
+  if (sessionResult.data.session === null) {
+    await supabaseClient.auth.signInAnonymously();;
+  }
+}
+signInIfNeeded();
+
 // ===== PAGE ELEMENTS + WORKING LIST =====
 // Grabs the text box where you type a new task
 const taskInput = document.querySelector("#task-input");
