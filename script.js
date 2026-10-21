@@ -93,7 +93,8 @@ function buildTask(text, completed, taskId) {
 }
 
 // ===== ADD A NEW TASK (Add button or Enter) =====
-taskForm.addEventListener("submit", (event) => {
+// async: this listener waits for the database before changing the page
+taskForm.addEventListener("submit", async (event) => {
   // Stops the form from reloading the page
   event.preventDefault();
   // Reads what was typed in the text box
@@ -105,12 +106,19 @@ taskForm.addEventListener("submit", (event) => {
   }
   // Makes a unique id for the new task
   const taskId = crypto.randomUUID();
+  // Saves the task to the database (user_id is filled in by the database)
+  const insertResult = await supabaseClient
+    .from("tasks")
+    .insert({ id: taskId, text: taskText });
+  // If the save failed, shows the error and stops (the text stays in the box)
+  if (insertResult.error !== null) {
+    console.error(insertResult.error);
+    return;
+  }
   // Builds the new task (<li>) on the page, not completed
   buildTask(taskText, false, taskId);
   // Adds the new task object to the working list
   tasks.push({ id: taskId, text: taskText, completed: false });
-  // Saves the whole working list to localStorage as text
-  localStorage.setItem("tasks", JSON.stringify(tasks));
   // Clears the text box for the next task
   taskInput.value = "";
 });
