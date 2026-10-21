@@ -1,6 +1,11 @@
 // Confirms script.js is linked to index.html (debug line; remove before shipping)
 console.log("JavaScript is connected!");
 
+// ===== SUPABASE =====
+const supabaseUrl = "https://cvaoxqryytupjobttubs.supabase.co";
+const supabaseKey = "sb_publishable_hDjyedrZL_mjxZ3fxdEBew_jiOAdS34";
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
 // ===== PAGE ELEMENTS + WORKING LIST =====
 // Grabs the text box where you type a new task
 const taskInput = document.querySelector("#task-input");
