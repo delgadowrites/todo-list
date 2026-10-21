@@ -13,7 +13,7 @@ async function signInIfNeeded() {
     await supabaseClient.auth.signInAnonymously();
   }
 }
-signInIfNeeded();
+// signInIfNeeded();
 
 // ===== PAGE ELEMENTS + WORKING LIST =====
 // Grabs the text box where you type a new task
@@ -25,25 +25,27 @@ const taskList = document.querySelector("#task-list");
 // Working list of task objects { id, text, completed } while the page is open
 const tasks = [];
 
-// ===== LOAD SAVED TASKS WHEN THE PAGE OPENS =====
-// Reads the saved tasks from localStorage as text (null on a first visit)
-let storedTasks = localStorage.getItem("tasks");
-// First visit: no saved text, so use the text of an empty array instead
-if (storedTasks === null) {
-  storedTasks = "[]";
-}
-// Turns the saved text back into an array of task objects
-const storedTasksArray = JSON.parse(storedTasks);
-// For each saved task object:
-for (let task of storedTasksArray) {
-  // Gives an id to tasks saved before ids existed (old data migration)
-  if (task.id === undefined) {
-    task.id = crypto.randomUUID();
+// ===== LOAD TASKS FROM SUPABASE =====
+// Reads this user's tasks from the database and rebuilds them on the page
+async function loadTasks() {
+  // Asks Supabase for the id, text and completed of each task, oldest first
+  // (RLS only gives back rows whose user_id matches this browser's user)
+  const loadResult = await supabaseClient
+    .from("tasks")
+    .select("id, text, completed")
+    .order("created_at");
+  // If the request failed, shows the error in red in the Console and stops
+  if (loadResult.error !== null) {
+    console.error(loadResult.error);
+    return;
   }
-  // Rebuilds that task (<li>) on the page
-  buildTask(task.text, task.completed, task.id);
-  // Copies the task object into the working list
-  tasks.push(task);
+  // For each row (task object) the database gave back:
+  for (let task of loadResult.data) {
+    // Rebuilds that task (<li>) on the page
+    buildTask(task.text, task.completed, task.id);
+    // Copies the task object into the working list
+    tasks.push(task);
+  }
 }
 
 // ===== XP =====
@@ -159,3 +161,12 @@ taskList.addEventListener("click", (event) => {
     return;
   }
 });
+
+// ===== START THE APP =====
+// Signs in first, then loads tasks (a read before sign-in gives back [])
+async function startApp() {
+  await signInIfNeeded();
+  await loadTasks();
+}
+// Runs at the end of the file, so taskList, tasks and buildTask already exist
+startApp();
