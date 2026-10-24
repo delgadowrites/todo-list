@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-23
+
+### Added
+- Levels: the XP needed for each level grows with the formula 40 + 15L + 5L² (60 XP for level 1 → 2). Level and progress are calculated from the saved XP total every time.
+- XP bar pinned to the bottom of the page: `LV 4`, a bar that fills toward the next level, and `50 / 180 XP`.
+
+### Changed
+- The bottom line shows the level, bar and progress instead of `XP: 45`.
+
 ## 2026-10-21
 
 ### Added
