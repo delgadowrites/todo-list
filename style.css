@@ -126,4 +126,32 @@ body {
   border-top: 2px solid var(--color-accent);
   font-size: 12px;
   text-align: center;
+  display: flex;
+  /* LV, bar and numbers in a row */
+  align-items: center;
+  gap: 12px;
+}
+
+#xp-bar {
+  flex: 1;
+  /* the bar takes up all the space between LV and the numbers */
+  height: 16px;
+  background-color: var(--color-bg);
+  /* the empty part of the track */
+  border: 2px solid var(--color-accent);
+}
+
+#xp-fill {
+  display: block;
+  /* a span needs this to have a width and height */
+  height: 100%;
+  width: 0%;
+  /* JavaScript changes this */
+  background-color: var(--color-accent);
+}
+
+#xp-level,
+#xp-numbers {
+  white-space: nowrap;
+  /* keeps "0 / 60 XP" on one line on phones */
 }

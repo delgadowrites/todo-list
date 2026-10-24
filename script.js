@@ -49,18 +49,44 @@ async function loadTasks() {
 }
 
 // ===== XP =====
-// Grabs the XP line at the bottom of the page          → box xpDisplay
+// Grabs the XP line at the bottom of the page
 const xpDisplay = document.querySelector("#xp-display");
-// How much XP one completed quest gives                → box xpPerQuest, 15
+// How much XP one completed quest gives
 const xpPerQuest = 15;
-// Reads saved XP as a number (first visit gives 0)     → box xp
+// These are used to create the XP Bar
+const xpLevel = document.querySelector("#xp-level");
+const xpNumbers = document.querySelector("#xp-numbers");
+const xpFill = document.querySelector("#xp-fill");
+// Reads saved XP as a number (first visit gives 0)
 let xp = Number(localStorage.getItem("xp"));
-// Shows the XP total on the page                       → call showXp
+
+// JRPG forumla for leveling up
+function xpToLevelUp(level) {
+  return 40 + (15 * level) + (5 * level ** 2);
+}
+
+// Shows the XP total on the page
 showXp();
 
-// Writes "XP: " and the total into xpDisplay           → function showXp
+// Shows current level, total XP needed to level up, and current banked XP
 function showXp() {
-  xpDisplay.textContent = "XP: " + xp;
+  // 4.   Create a box level, set to 1
+  let level = 1;
+  // 5.   Create a box xpIntoLevel, set to the saved xp
+  let xpIntoLevel = xp;
+  // 6.   While xpIntoLevel is enough to level up (xpIntoLevel >= xpToLevelUp(level))
+  while (xpIntoLevel >= xpToLevelUp(level)) {
+    // 7.     Subtract xpToLevelUp(level) from xpIntoLevel
+    xpIntoLevel -= xpToLevelUp(level);
+    // 8.     Add 1 to level
+    level += 1;
+  }
+  // 9a. Show the level in xpLevel
+  xpLevel.textContent = "LV " + level;
+  // 9b. Show xpIntoLevel / xpToLevelUp(level) XP in xpNumbers
+  xpNumbers.textContent = xpIntoLevel + " / " + xpToLevelUp(level) + " XP";
+  // 10.  Set the bar's width to xpIntoLevel ÷ xpToLevelUp(level) × 100, as a %
+  xpFill.style.width = (xpIntoLevel / xpToLevelUp(level)) * 100 + "%";
 }
 
 // ===== BUILD ONE TASK (<li>) ON THE PAGE =====
