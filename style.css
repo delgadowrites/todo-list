@@ -155,3 +155,30 @@ body {
   white-space: nowrap;
   /* keeps "0 / 60 XP" on one line on phones */
 }
+
+.xp-float {
+  position: absolute;
+  /* placed relative to #xp-display (fixed elements work as the anchor) */
+  bottom: 100%;
+  /* sits just above the XP line */
+  right: 12px;
+  /* above the numbers on the right */
+  color: var(--color-accent);
+  font-size: 16px;
+  pointer-events: none;
+  /* taps go through it */
+  animation: float-up 1s forwards;
+  /* forwards: stays invisible at the end instead of flashing back before it's removed */
+}
+
+@keyframes float-up {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+}

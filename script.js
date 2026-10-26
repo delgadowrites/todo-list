@@ -216,6 +216,22 @@ taskList.addEventListener("click", async (event) => {
     // Shows the new total on the page
     showXp();
 
+    //=======Xp Animation Effect========
+    // make a new span in a box called xpFloat
+    const xpFloat = document.createElement("span");
+    // give xp float the class xp-float
+    xpFloat.classList.add("xp-float");
+    // give xpFloat the text "+" + xpPerQuest + " XP"
+    xpFloat.textContent = "+" + xpPerQuest + " XP";
+    // Put xpFloat inside xpDisplay
+    xpDisplay.appendChild(xpFloat);
+    // Listen on xpFloat for the animationend event
+    xpFloat.addEventListener("animationend", () => {
+      // When it fires, remove xpFloat itself (not its parent)
+      xpFloat.remove();
+    });
+
+
     // --- Clicked anything else in the list: does nothing ---
   } else {
     return;
