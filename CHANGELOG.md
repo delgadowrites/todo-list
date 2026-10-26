@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-26
+
+### Added
+- Floating "+15 XP" effect: when a quest is completed, a gold "+15 XP" rises above the XP bar and fades out (CSS @keyframes), then removes itself from the page.
+
 ## 2026-10-23
 
 ### Added
