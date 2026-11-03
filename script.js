@@ -65,6 +65,15 @@ function xpToLevelUp(level) {
   return 40 + (15 * level) + (5 * level ** 2);
 }
 
+// egde case 1 check
+if (Number.isFinite(xp)) {
+  if (xp < 0) {
+    xp = 0;
+  }
+} else {
+  xp = 0;
+}
+
 // Shows the XP total on the page
 showXp();
 
