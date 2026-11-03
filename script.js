@@ -22,6 +22,8 @@ const taskInput = document.querySelector("#task-input");
 const taskForm = document.querySelector("#task-form");
 // Grabs the empty <ul> that holds every task (<li>)
 const taskList = document.querySelector("#task-list");
+// Grabs the Add button
+const addButton = document.querySelector("#add-button");
 // Working list of task objects { id, text, completed } while the page is open
 const tasks = [];
 
@@ -139,12 +141,16 @@ taskForm.addEventListener("submit", async (event) => {
     taskInput.value = "";
     return;
   }
+  // Turns Add Button off
+  addButton.disabled = true;
   // Makes a unique id for the new task
   const taskId = crypto.randomUUID();
   // Saves the task to the database (user_id is filled in by the database)
   const insertResult = await supabaseClient
     .from("tasks")
     .insert({ id: taskId, text: taskText });
+  // Turns Add Button back on
+  addButton.disabled = false;
   // If the save failed, shows the error and stops (the text stays in the box)
   if (insertResult.error !== null) {
     console.error(insertResult.error);
