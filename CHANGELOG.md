@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-02
+
+### Added
+- Add button turns off while a new task saves, so pressing Enter or tapping Add again can't save the same task twice. It turns back on as soon as the save finishes, whether it worked or failed.
+
+### Fixed
+- Broken saved XP no longer breaks the XP bar. A negative number (`-5`) or a value that isn't a normal number (`abc`, `Infinity`) now resets XP to 0 when the page loads. Before, `Infinity` froze the page.
+
 ## 2026-10-26
 
 ### Added
