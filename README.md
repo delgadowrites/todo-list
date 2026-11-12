@@ -1,16 +1,29 @@
 # To-Do Quest
 
-A pixel-art to-do list where finishing a task earns XP. Tasks are saved in a Supabase Postgres database, and each browser only sees its own tasks.
+A pixel-art to-do list with an RPG hero: finishing a task earns XP and trains one of your hero's stats. Tasks are saved in a Supabase Postgres database, and each browser only sees its own tasks.
 
 **Live demo:** https://delgadowrites.github.io/todo-list/
 
 ## What it does
 
-- Add a task (Add button or Enter). Blank tasks are blocked.
-- **complete** removes the task and gives +15 XP.
+- Add a task (Add button or Enter) and pick the stat it trains. Blank tasks are blocked.
+- **complete** removes the task, gives +15 XP, and gives +15 to that task's stat.
 - **×** removes the task with no XP (for typos or tasks you don't need).
-- Your XP total shows at the bottom of the screen.
+- Your level and XP bar show at the bottom of the screen. A banner pops up when your hero or a stat levels up.
+- **Hero** opens your character sheet: name, title, level, a bar for each stat, quests done, and your best stat. **edit** next to the name lets you rename your hero (up to 20 characters; Enter saves, Esc cancels).
 - Tasks are saved in a database and come back after a refresh.
+
+### Stats
+
+| Stat | Trained by |
+|---|---|
+| STR (Strength) | exercise, chores, physical work |
+| INT (Intellect) | studying, coding, reading |
+| CRE (Creativity) | writing, art, music |
+| CHA (Charisma) | calls, emails, social |
+| WIS (Wisdom) | admin, planning, self-care (the default) |
+
+Each stat levels up with the same formula as the hero: 40 + 15L + 5L² XP per level.
 
 ## How it's built
 
@@ -20,7 +33,7 @@ A pixel-art to-do list where finishing a task earns XP. Tasks are saved in a Sup
 | Database | Supabase Postgres (`tasks` table) |
 | Security | Row Level Security (RLS) + Supabase anonymous sign-in |
 | Supabase client | `supabase-js` v2, loaded from the jsDelivr CDN |
-| XP total | Browser localStorage |
+| XP total and hero (name, quests done, stat XP) | Browser localStorage |
 | Hosting | GitHub Pages |
 
 **How the data stays private:** when the page opens, it signs in anonymously, so each browser gets its own user id. Every task row stores that id in `user_id`. RLS policies allow reading, adding, updating and deleting only rows where `user_id = auth.uid()`.
@@ -39,6 +52,7 @@ A pixel-art to-do list where finishing a task earns XP. Tasks are saved in a Sup
         user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
         text text not null,
         completed boolean default false,
+        stat text default 'WIS',
         created_at timestamptz default now()
       );
 
