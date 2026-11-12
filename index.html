@@ -15,6 +15,67 @@
 
 <body>
   <h1>To-Do Quest</h1>
+  <button type="button" id="hero-button">Hero</button>
+
+  <!-- Character sheet: a <dialog> opens on top of the page, and Esc closes it -->
+  <!-- Step 1: the numbers below are made up; step 2 fills them from saved data -->
+  <dialog id="hero-sheet" aria-labelledby="hero-name">
+    <!-- Inner box holds the padding, so a click on the dialog itself can only mean the backdrop -->
+    <div class="sheet-inner">
+      <button type="button" id="hero-close" aria-label="Close character sheet">×</button>
+
+      <div class="sheet-header">
+        <img src="lildude.png" alt="Your hero" class="hero-portrait">
+        <div>
+          <h2 id="hero-name">Lil Dude</h2>
+          <p id="hero-title">Adventurer</p>
+        </div>
+      </div>
+
+      <div class="sheet-level">
+        <span>LV 4</span>
+        <span class="mini-bar"><span class="mini-fill" style="width: 28%"></span></span>
+        <span>50 / 180 XP</span>
+      </div>
+
+      <h3>Stats</h3>
+      <ul class="stat-list">
+        <li class="stat">
+          <span class="stat-name">STR</span>
+          <span class="mini-bar"><span class="mini-fill" style="width: 40%"></span></span>
+          <span class="stat-level">LV 2</span>
+        </li>
+        <li class="stat">
+          <span class="stat-name">INT</span>
+          <span class="mini-bar"><span class="mini-fill" style="width: 75%"></span></span>
+          <span class="stat-level">LV 3</span>
+        </li>
+        <li class="stat">
+          <span class="stat-name">CRE</span>
+          <span class="mini-bar"><span class="mini-fill" style="width: 10%"></span></span>
+          <span class="stat-level">LV 1</span>
+        </li>
+        <li class="stat">
+          <span class="stat-name">CHA</span>
+          <span class="mini-bar"><span class="mini-fill" style="width: 55%"></span></span>
+          <span class="stat-level">LV 1</span>
+        </li>
+        <li class="stat">
+          <span class="stat-name">WIS</span>
+          <span class="mini-bar"><span class="mini-fill" style="width: 25%"></span></span>
+          <span class="stat-level">LV 2</span>
+        </li>
+      </ul>
+
+      <h3>Record</h3>
+      <dl class="record">
+        <dt>Quests done</dt>
+        <dd>23</dd>
+        <dt>Best stat</dt>
+      <dd>INT</dd>
+    </dl>
+    </div>
+  </dialog>
   <form id="task-form">
     <label for="task-input">Enter task here: </label>
     <input type="text" name="task" id="task-input" required />

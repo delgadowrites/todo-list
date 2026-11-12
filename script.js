@@ -27,6 +27,27 @@ const addButton = document.querySelector("#add-button");
 // Working list of task objects { id, text, completed } while the page is open
 const tasks = [];
 
+// ===== CHARACTER SHEET (open / close) =====
+// Grabs the Hero button, the sheet (<dialog>) and the sheet's × button
+const heroButton = document.querySelector("#hero-button");
+const heroSheet = document.querySelector("#hero-sheet");
+const heroClose = document.querySelector("#hero-close");
+// Hero button: opens the sheet on top of the page (Esc also closes it)
+heroButton.addEventListener("click", () => {
+  heroSheet.showModal();
+});
+// × button: closes the sheet
+heroClose.addEventListener("click", () => {
+  heroSheet.close();
+});
+// Clicking the dimmed area outside the sheet also closes it
+// (a click on the backdrop reports the <dialog> itself as the target)
+heroSheet.addEventListener("click", (event) => {
+  if (event.target === heroSheet) {
+    heroSheet.close();
+  }
+});
+
 // ===== LOAD TASKS FROM SUPABASE =====
 // Reads this user's tasks from the database and rebuilds them on the page
 async function loadTasks() {
