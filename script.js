@@ -26,6 +26,42 @@ const taskList = document.querySelector("#task-list");
 const addButton = document.querySelector("#add-button");
 // Grabs the stat dropdown (which stat a new task trains)
 const statInput = document.querySelector("#stat-input");
+
+// ===== STAT PICKER (the button next to the task box) =====
+// The button opens the picker by itself (popovertarget in the HTML).
+// Here: choosing an option, and putting focus on the current choice when it opens.
+const statButtonText = document.querySelector("#stat-button-text");
+const statPicker = document.querySelector("#stat-picker");
+const statOptions = document.querySelectorAll(".stat-option");
+
+// Each option: clicking it (or Enter / Space on it) picks that stat
+for (let option of statOptions) {
+  option.addEventListener("click", () => {
+    // Reads the stat from the option's data-stat label, like "INT"
+    const chosenStat = option.dataset.stat;
+    // Saves it in the hidden input (the add-task code reads it from there)
+    statInput.value = chosenStat;
+    // Shows it on the button
+    statButtonText.textContent = chosenStat;
+    // Marks only this option as chosen (aria-pressed tells screen readers, CSS styles it)
+    for (let other of statOptions) {
+      if (other === option) {
+        other.setAttribute("aria-pressed", "true");
+      } else {
+        other.setAttribute("aria-pressed", "false");
+      }
+    }
+    // Closes the picker (Esc or a click outside also closes it, for free)
+    statPicker.hidePopover();
+  });
+}
+
+// When the picker opens, puts keyboard focus on the stat that's chosen now
+statPicker.addEventListener("toggle", (event) => {
+  if (event.newState === "open") {
+    statPicker.querySelector('[aria-pressed="true"]').focus();
+  }
+});
 // Working list of task objects { id, text, completed, stat } while the page is open
 const tasks = [];
 

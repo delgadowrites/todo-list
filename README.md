@@ -6,7 +6,7 @@ A pixel-art to-do list with an RPG hero: finishing a task earns XP and trains on
 
 ## What it does
 
-- Add a task (Add button or Enter) and pick the stat it trains. Blank tasks are blocked.
+- Add a task (Add button or Enter) and pick the stat it trains. The stat button opens a picker that explains each stat. Blank tasks are blocked.
 - **complete** removes the task, gives +15 XP, and gives +15 to that task's stat.
 - **×** removes the task with no XP (for typos or tasks you don't need).
 - Your level and XP bar show at the bottom of the screen. A banner pops up when your hero or a stat levels up.

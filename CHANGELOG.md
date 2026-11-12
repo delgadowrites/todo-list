@@ -5,7 +5,8 @@
 ### Added
 - Character sheet: the Hero button opens a pixel-style sheet (a `<dialog>`) with your portrait, name, a title that changes with your level (Novice, Adventurer, Hero, Champion, Legend), level bar, five stats, quests done, and best stat. Closes with ×, Esc, or a click outside it.
 - Five stats: STR, INT, CRE, CHA, WIS. Each one levels up with the same formula as the hero.
-- Stat picker next to the task box (WIS by default). Each task's stat is saved in a new `stat` column in Supabase and shown as a badge at the start of the task.
+- Stat picker next to the task box (WIS by default). The button opens a panel that lists each stat with a short description (for example, "INT · Intellect: Studying, coding, reading"), so you know which one to pick. Choose with a click, or Tab and Enter; Esc or a click outside closes it without changing anything. Built with the HTML `popover` attribute.
+- Each task's stat is saved in a new `stat` column in Supabase and shown as a badge at the start of the task.
 - Completing a task gives its stat +15 XP and counts the quest. The floating text names the stat (`+15 XP · INT`).
 - Level-up banner: when the hero or a stat levels up, a banner pops up above the XP bar (`LEVEL UP! LV 3`, `INT LV 2!`) and the bar glows. With "reduce motion" turned on, the banner fades in place instead of popping.
 - Rename your hero: **edit** next to the name on the character sheet swaps it for a text box (up to 20 characters). Enter or Save keeps the new name; Esc cancels without closing the sheet. A blank name keeps the old one.

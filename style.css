@@ -357,15 +357,101 @@ body {
 
 /* ===== STAT PICKER + TASK BADGES ===== */
 
-#stat-input {
+#stat-button {
   font-family: inherit;
   background-color: var(--color-bg-2);
   color: var(--color-accent-2);
   border: 2px solid var(--color-accent);
-  padding: 6px;
+  padding: 6px 8px;
   font-size: 16px;
-  /* 16px stops iPhone Safari from zooming in, same as the task box */
   cursor: pointer;
+}
+
+#stat-button:hover {
+  background-color: var(--color-accent);
+  color: var(--color-bg-2);
+}
+
+/* A down arrow drawn as 3 rows of square "pixels" (5, then 3, then 1 wide).
+   clip-path cuts a 15×9 box into that stepped shape; each pixel is 3×3. */
+.pixel-arrow {
+  display: inline-block;
+  width: 15px;
+  height: 9px;
+  margin-left: 6px;
+  vertical-align: middle;
+  background-color: currentColor;
+  /* uses the button's text color, so it flips on hover too */
+  clip-path: polygon(
+    0 0, 100% 0,
+    100% 33.33%, 80% 33.33%,
+    80% 66.66%, 60% 66.66%,
+    60% 100%, 40% 100%,
+    40% 66.66%, 20% 66.66%,
+    20% 33.33%, 0 33.33%
+  );
+}
+
+#stat-picker {
+  /* a popover opens in the middle of the screen, on top of everything */
+  font-family: inherit;
+  background-color: var(--color-bg-2);
+  color: var(--color-accent-2);
+  border: 4px solid var(--color-accent);
+  box-shadow: 6px 6px 0 var(--color-accent-3);
+  padding: 16px;
+  width: min(360px, calc(100vw - 32px));
+  /* 360px on desktop, full width minus a 16px gutter on each side on phones */
+  box-sizing: border-box;
+}
+
+#stat-picker::backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.picker-heading {
+  font-size: 12px;
+  color: var(--color-accent);
+  line-height: 1.6;
+  margin: 0 0 12px 0;
+}
+
+.stat-option {
+  /* each option is a full-width button: name on top, description below */
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  background-color: var(--color-bg-2);
+  color: var(--color-accent-2);
+  border: 2px solid var(--color-bg);
+  padding: 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.stat-option:hover,
+.stat-option:focus-visible {
+  border-color: var(--color-accent);
+}
+
+/* the stat that's chosen right now */
+.stat-option[aria-pressed="true"] {
+  border-color: var(--color-accent-2);
+  background-color: var(--color-bg);
+}
+
+.option-name {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.option-desc {
+  display: block;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--color-text);
 }
 
 .stat-badge {

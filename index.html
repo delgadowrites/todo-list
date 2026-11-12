@@ -89,15 +89,37 @@
   <form id="task-form">
     <label for="task-input">Enter task here: </label>
     <input type="text" name="task" id="task-input" required />
-    <!-- Which stat this task trains; WIS is picked unless you change it -->
-    <label for="stat-input" class="visually-hidden">Stat this task trains</label>
-    <select id="stat-input">
-      <option value="STR">STR</option>
-      <option value="INT">INT</option>
-      <option value="CRE">CRE</option>
-      <option value="CHA">CHA</option>
-      <option value="WIS" selected>WIS</option>
-    </select>
+    <!-- Which stat this task trains; WIS is picked unless you change it.
+         The button opens the picker (popovertarget needs no JavaScript to open it);
+         the hidden input holds the chosen stat for script.js to read. -->
+    <input type="hidden" id="stat-input" value="WIS">
+    <button type="button" id="stat-button" popovertarget="stat-picker">
+      <span class="visually-hidden">Stat this task trains: </span><span id="stat-button-text">WIS</span>
+      <span class="pixel-arrow" aria-hidden="true"></span>
+    </button>
+    <div id="stat-picker" popover>
+      <p class="picker-heading">Which stat does this task train?</p>
+      <button type="button" class="stat-option" data-stat="STR" aria-pressed="false">
+        <span class="option-name">STR · Strength</span>
+        <span class="option-desc">Exercise, chores, physical work</span>
+      </button>
+      <button type="button" class="stat-option" data-stat="INT" aria-pressed="false">
+        <span class="option-name">INT · Intellect</span>
+        <span class="option-desc">Studying, coding, reading</span>
+      </button>
+      <button type="button" class="stat-option" data-stat="CRE" aria-pressed="false">
+        <span class="option-name">CRE · Creativity</span>
+        <span class="option-desc">Writing, art, music</span>
+      </button>
+      <button type="button" class="stat-option" data-stat="CHA" aria-pressed="false">
+        <span class="option-name">CHA · Charisma</span>
+        <span class="option-desc">Calls, emails, time with people</span>
+      </button>
+      <button type="button" class="stat-option" data-stat="WIS" aria-pressed="true">
+        <span class="option-name">WIS · Wisdom</span>
+        <span class="option-desc">Admin, planning, self-care</span>
+      </button>
+    </div>
     <button type="submit" id="add-button">Add to list!</button>
   </form>
   <ul id="task-list">
