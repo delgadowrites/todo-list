@@ -24,7 +24,9 @@ const taskForm = document.querySelector("#task-form");
 const taskList = document.querySelector("#task-list");
 // Grabs the Add button
 const addButton = document.querySelector("#add-button");
-// Working list of task objects { id, text, completed } while the page is open
+// Grabs the stat dropdown (which stat a new task trains)
+const statInput = document.querySelector("#stat-input");
+// Working list of task objects { id, text, completed, stat } while the page is open
 const tasks = [];
 
 // ===== CHARACTER SHEET (open / close) =====
@@ -53,11 +55,11 @@ heroSheet.addEventListener("click", (event) => {
 // ===== LOAD TASKS FROM SUPABASE =====
 // Reads this user's tasks from the database and rebuilds them on the page
 async function loadTasks() {
-  // Asks Supabase for the id, text and completed of each task, oldest first
+  // Asks Supabase for the id, text, completed and stat of each task, oldest first
   // (RLS only gives back rows whose user_id matches this browser's user)
   const loadResult = await supabaseClient
     .from("tasks")
-    .select("id, text, completed")
+    .select("id, text, completed, stat")
     .order("created_at");
   // If the request failed, shows the error in red in the Console and stops
   if (loadResult.error !== null) {
@@ -66,8 +68,12 @@ async function loadTasks() {
   }
   // For each row (task object) the database gave back:
   for (let task of loadResult.data) {
+    // Guard: a missing or unknown stat (old rows, typos in the database) becomes WIS
+    if (!statNames.includes(task.stat)) {
+      task.stat = "WIS";
+    }
     // Rebuilds that task (<li>) on the page
-    buildTask(task.text, task.completed, task.id);
+    buildTask(task.text, task.completed, task.id, task.stat);
     // Copies the task object into the working list
     tasks.push(task);
   }
@@ -249,7 +255,7 @@ function showHero() {
 
 // ===== BUILD ONE TASK (<li>) ON THE PAGE =====
 // Creates a task (<li>) with its text and buttons, and adds it to the list
-function buildTask(text, completed, taskId) {
+function buildTask(text, completed, taskId, stat) {
   // Creates the task (<li>) and gives it the class "task"
   const newTask = document.createElement("li");
   newTask.classList.add("task");
@@ -266,6 +272,12 @@ function buildTask(text, completed, taskId) {
   const spanWrapper = document.createElement("span");
   spanWrapper.classList.add("task-text");
   spanWrapper.textContent = text;
+  // Creates the stat badge (like "INT") and puts it at the start of the text,
+  // so the badge and text wrap together and the text keeps the full width on phones
+  const statBadge = document.createElement("span");
+  statBadge.classList.add("stat-badge");
+  statBadge.textContent = stat;
+  spanWrapper.prepend(statBadge);
   newTask.appendChild(spanWrapper);
   // Creates the "complete" button, and puts it in the task (<li>)
   const completeButton = document.createElement("button");
@@ -290,12 +302,14 @@ taskForm.addEventListener("submit", async (event) => {
   }
   // Turns Add Button off
   addButton.disabled = true;
+  // Reads which stat was picked in the dropdown
+  const taskStat = statInput.value;
   // Makes a unique id for the new task
   const taskId = crypto.randomUUID();
   // Saves the task to the database (user_id is filled in by the database)
   const insertResult = await supabaseClient
     .from("tasks")
-    .insert({ id: taskId, text: taskText });
+    .insert({ id: taskId, text: taskText, stat: taskStat });
   // Turns Add Button back on
   addButton.disabled = false;
   // If the save failed, shows the error and stops (the text stays in the box)
@@ -304,11 +318,15 @@ taskForm.addEventListener("submit", async (event) => {
     return;
   }
   // Builds the new task (<li>) on the page, not completed
-  buildTask(taskText, false, taskId);
+  buildTask(taskText, false, taskId, taskStat);
   // Adds the new task object to the working list
-  tasks.push({ id: taskId, text: taskText, completed: false });
-  // Clears the text box for the next task
-  taskInput.value = "";
+  tasks.push({ id: taskId, text: taskText, completed: false, stat: taskStat });
+  // Clears the text box for the next task, but only if it still holds the text we
+  // just saved. If you started typing the next task while this one was saving,
+  // your new text is kept. (The stat stays picked, handy for a batch of the same kind.)
+  if (taskInput.value === taskText) {
+    taskInput.value = "";
+  }
 });
 
 // ===== CLICKS INSIDE THE LIST (one listener for every task) =====

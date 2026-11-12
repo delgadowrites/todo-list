@@ -354,3 +354,45 @@ body {
   color: var(--color-accent);
   text-align: right;
 }
+
+/* ===== STAT PICKER + TASK BADGES ===== */
+
+#stat-input {
+  font-family: inherit;
+  background-color: var(--color-bg-2);
+  color: var(--color-accent-2);
+  border: 2px solid var(--color-accent);
+  padding: 6px;
+  font-size: 16px;
+  /* 16px stops iPhone Safari from zooming in, same as the task box */
+  cursor: pointer;
+}
+
+.stat-badge {
+  display: inline-block;
+  /* sits at the start of the task text, like a word */
+  margin-right: 8px;
+  color: var(--color-accent-2);
+  border: 2px solid var(--color-accent-2);
+  padding: 4px;
+  font-size: 10px;
+}
+
+.task-text {
+  flex: 1;
+  /* the text takes the space between the badge and the complete button */
+  min-width: 0;
+  /* lets the text shrink in the row so overflow-wrap can do its job */
+  overflow-wrap: break-word;
+  /* only breaks a word that's too long for a whole line on its own */
+}
+
+/* Hides a label on screen but keeps it for screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
