@@ -327,6 +327,8 @@ body {
 .mini-fill {
   display: block;
   height: 100%;
+  width: 0%;
+  /* empty until showHero() sets the width */
   background-color: var(--color-accent);
 }
 

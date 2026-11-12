@@ -32,8 +32,10 @@ const tasks = [];
 const heroButton = document.querySelector("#hero-button");
 const heroSheet = document.querySelector("#hero-sheet");
 const heroClose = document.querySelector("#hero-close");
-// Hero button: opens the sheet on top of the page (Esc also closes it)
+// Hero button: fills in the latest numbers, then opens the sheet on top of the page
+// (Esc also closes it). showHero is further down; function declarations work anywhere.
 heroButton.addEventListener("click", () => {
+  showHero();
   heroSheet.showModal();
 });
 // × button: closes the sheet
@@ -100,25 +102,149 @@ if (Number.isFinite(xp)) {
 // Shows the XP total on the page
 showXp();
 
-// Shows current level, total XP needed to level up, and current banked XP
-function showXp() {
-  // 4.   Create a box level, set to 1
+// Turns a total XP number into { level, xpIntoLevel, xpNeeded }
+// Used by the hero level AND by each stat, so they all level up the same way
+function levelFromXp(totalXp) {
+  // Start at level 1 with all the XP still "in the bank"
   let level = 1;
-  // 5.   Create a box xpIntoLevel, set to the saved xp
-  let xpIntoLevel = xp;
-  // 6.   While xpIntoLevel is enough to level up (xpIntoLevel >= xpToLevelUp(level))
+  let xpIntoLevel = totalXp;
+  // While the bank is enough to level up: pay for the level and go up one
   while (xpIntoLevel >= xpToLevelUp(level)) {
-    // 7.     Subtract xpToLevelUp(level) from xpIntoLevel
     xpIntoLevel -= xpToLevelUp(level);
-    // 8.     Add 1 to level
     level += 1;
   }
-  // 9a. Show the level in xpLevel
-  xpLevel.textContent = "LV " + level;
-  // 9b. Show xpIntoLevel / xpToLevelUp(level) XP in xpNumbers
-  xpNumbers.textContent = xpIntoLevel + " / " + xpToLevelUp(level) + " XP";
-  // 10.  Set the bar's width to xpIntoLevel ÷ xpToLevelUp(level) × 100, as a %
-  xpFill.style.width = (xpIntoLevel / xpToLevelUp(level)) * 100 + "%";
+  // Hands back all three numbers in one object
+  return { level: level, xpIntoLevel: xpIntoLevel, xpNeeded: xpToLevelUp(level) };
+}
+
+// Shows current level, total XP needed to level up, and current banked XP
+function showXp() {
+  // Works out the level from the saved xp
+  const progress = levelFromXp(xp);
+  // Shows the level, the "50 / 180 XP" numbers, and how full the bar is (as a %)
+  xpLevel.textContent = "LV " + progress.level;
+  xpNumbers.textContent = progress.xpIntoLevel + " / " + progress.xpNeeded + " XP";
+  xpFill.style.width = (progress.xpIntoLevel / progress.xpNeeded) * 100 + "%";
+}
+
+// ===== HERO DATA (saved in localStorage under "hero") =====
+// The five stats, in the order they appear on the sheet
+const statNames = ["STR", "INT", "CRE", "CHA", "WIS"];
+// Titles by hero level: you get the last title whose minLevel you've reached
+const heroTitles = [
+  { minLevel: 1, title: "Novice" },
+  { minLevel: 3, title: "Adventurer" },
+  { minLevel: 5, title: "Hero" },
+  { minLevel: 10, title: "Champion" },
+  { minLevel: 20, title: "Legend" },
+];
+
+// Makes a brand-new hero (first visit, or saved data was broken)
+function newHero() {
+  return {
+    name: "Lil Dude",
+    questsDone: 0,
+    statXp: { STR: 0, INT: 0, CRE: 0, CHA: 0, WIS: 0 },
+  };
+}
+
+// Returns n if it's a normal number 0 or more, otherwise 0 (same idea as the xp guard)
+function safeCount(n) {
+  if (Number.isFinite(n) && n >= 0) {
+    return n;
+  }
+  return 0;
+}
+
+// Reads the saved hero, fixing anything missing or broken piece by piece
+function loadHero() {
+  // Starts from a fresh hero; saved values are copied over it only if they're OK
+  const loaded = newHero();
+  // Reads the saved text (null on the first visit)
+  const savedText = localStorage.getItem("hero");
+  if (savedText === null) {
+    return loaded;
+  }
+  // JSON.parse throws an error on broken text, so try/catch keeps the page alive
+  let saved;
+  try {
+    saved = JSON.parse(savedText);
+  } catch (error) {
+    console.error("Saved hero was broken, starting fresh:", error);
+    return loaded;
+  }
+  // Saved data must be an object (not null, a number, a list...)
+  if (typeof saved !== "object" || saved === null || Array.isArray(saved)) {
+    return loaded;
+  }
+  // Name: must be text with something in it
+  if (typeof saved.name === "string" && saved.name.trim() !== "") {
+    loaded.name = saved.name;
+  }
+  // Quest count: must be a normal number 0 or more
+  loaded.questsDone = safeCount(saved.questsDone);
+  // Each stat's XP: must be a normal number 0 or more
+  if (typeof saved.statXp === "object" && saved.statXp !== null) {
+    for (let stat of statNames) {
+      loaded.statXp[stat] = safeCount(saved.statXp[stat]);
+    }
+  }
+  return loaded;
+}
+
+// Saves the hero as text (localStorage only stores text)
+function saveHero() {
+  localStorage.setItem("hero", JSON.stringify(hero));
+}
+
+// The hero while the page is open
+const hero = loadHero();
+
+// ===== DRAW THE CHARACTER SHEET =====
+// Grabs the parts of the sheet that change
+const heroName = document.querySelector("#hero-name");
+const heroTitle = document.querySelector("#hero-title");
+const sheetLevel = document.querySelector("#sheet-level");
+const sheetFill = document.querySelector("#sheet-fill");
+const sheetNumbers = document.querySelector("#sheet-numbers");
+const questsDoneDisplay = document.querySelector("#quests-done");
+const bestStatDisplay = document.querySelector("#best-stat");
+
+// Fills in the sheet from the hero object and the saved xp
+function showHero() {
+  // Name, and the title that matches the hero's level
+  const progress = levelFromXp(xp);
+  heroName.textContent = hero.name;
+  for (let rank of heroTitles) {
+    if (progress.level >= rank.minLevel) {
+      heroTitle.textContent = rank.title;
+    }
+  }
+  // Hero level bar (same numbers as the bar at the bottom of the page)
+  sheetLevel.textContent = "LV " + progress.level;
+  sheetNumbers.textContent = progress.xpIntoLevel + " / " + progress.xpNeeded + " XP";
+  sheetFill.style.width = (progress.xpIntoLevel / progress.xpNeeded) * 100 + "%";
+
+  // Each stat row: finds the <li> labeled data-stat="STR" (etc.) and fills it in
+  for (let stat of statNames) {
+    const statProgress = levelFromXp(hero.statXp[stat]);
+    const row = document.querySelector('.stat[data-stat="' + stat + '"]');
+    row.querySelector(".stat-level").textContent = "LV " + statProgress.level;
+    row.querySelector(".mini-fill").style.width =
+      (statProgress.xpIntoLevel / statProgress.xpNeeded) * 100 + "%";
+  }
+
+  // Record: quest count, and the stat with the most XP ("—" until one has any)
+  questsDoneDisplay.textContent = hero.questsDone;
+  let bestStat = "—";
+  let bestXp = 0;
+  for (let stat of statNames) {
+    if (hero.statXp[stat] > bestXp) {
+      bestStat = stat;
+      bestXp = hero.statXp[stat];
+    }
+  }
+  bestStatDisplay.textContent = bestStat;
 }
 
 // ===== BUILD ONE TASK (<li>) ON THE PAGE =====
