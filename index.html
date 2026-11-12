@@ -27,7 +27,17 @@
       <div class="sheet-header">
         <img src="lildude.png" alt="Your hero" class="hero-portrait">
         <div>
-          <h2 id="hero-name">Lil Dude</h2>
+          <!-- Name row: the name and an edit button (hidden while renaming) -->
+          <div id="name-row">
+            <h2 id="hero-name">Lil Dude</h2>
+            <button type="button" id="rename-button" aria-label="Change hero name">edit</button>
+          </div>
+          <!-- Rename form: shows in place of the name row while renaming -->
+          <form id="rename-form" hidden>
+            <label for="rename-input" class="visually-hidden">Hero name</label>
+            <input type="text" id="rename-input" maxlength="20" autocomplete="off" required>
+            <button type="submit" id="rename-save">Save</button>
+          </form>
           <p id="hero-title">Novice</p>
         </div>
       </div>

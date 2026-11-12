@@ -253,6 +253,91 @@ function showHero() {
   bestStatDisplay.textContent = bestStat;
 }
 
+// ===== RENAME THE HERO (from the character sheet) =====
+// Grabs the name row (name + edit button), the rename form, and its text box
+const nameRow = document.querySelector("#name-row");
+const renameButton = document.querySelector("#rename-button");
+const renameForm = document.querySelector("#rename-form");
+const renameInput = document.querySelector("#rename-input");
+
+// Swaps the name row for the form, with the current name ready to edit
+function startRenaming() {
+  renameInput.value = hero.name;
+  nameRow.hidden = true;
+  renameForm.hidden = false;
+  // Puts the cursor in the box and selects the old name, so typing replaces it
+  renameInput.focus();
+  renameInput.select();
+}
+
+// Swaps back to the name row without saving anything
+function stopRenaming() {
+  renameForm.hidden = true;
+  nameRow.hidden = false;
+}
+
+// edit button: starts renaming
+renameButton.addEventListener("click", startRenaming);
+
+// Save button or Enter: saves the new name
+renameForm.addEventListener("submit", (event) => {
+  // Stops the form from reloading the page
+  event.preventDefault();
+  // Removes spaces at the start and end
+  const newName = renameInput.value.trim();
+  // Blank (or spaces only): keeps the old name; anything else becomes the new name
+  if (newName !== "") {
+    hero.name = newName;
+    saveHero();
+  }
+  stopRenaming();
+  showHero();
+  // Puts focus back on the edit button, so keyboard users don't get lost
+  renameButton.focus();
+});
+
+// Esc normally closes the whole sheet. While renaming, it only cancels the rename.
+// (Esc fires a "cancel" event on the <dialog>; preventDefault keeps the sheet open)
+heroSheet.addEventListener("cancel", (event) => {
+  if (!renameForm.hidden) {
+    event.preventDefault();
+    stopRenaming();
+    renameButton.focus();
+  }
+});
+
+// If the sheet closes mid-rename (× or a click outside), the next open starts fresh
+heroSheet.addEventListener("close", stopRenaming);
+
+// ===== LEVEL-UP FLASH =====
+// Grabs the XP bar track (it glows on a level-up)
+const xpBar = document.querySelector("#xp-bar");
+
+// Shows a banner above the XP line (one line per level-up) and makes the bar glow
+function showLevelUp(lines) {
+  // Builds the banner, one line per message ("\n" + white-space: pre-line in the CSS)
+  const banner = document.createElement("span");
+  banner.classList.add("level-up-banner");
+  banner.textContent = lines.join("\n");
+  // role="status" makes screen readers announce the level-up
+  banner.setAttribute("role", "status");
+  xpDisplay.appendChild(banner);
+  // Same clean-up as the +XP float: remove the banner when its animation ends
+  banner.addEventListener("animationend", () => {
+    banner.remove();
+  });
+
+  // Makes the bar glow, then takes the class off so the next level-up can glow again
+  xpBar.classList.add("level-up-glow");
+  xpBar.addEventListener(
+    "animationend",
+    () => {
+      xpBar.classList.remove("level-up-glow");
+    },
+    { once: true } // the listener removes itself after running one time
+  );
+}
+
 // ===== BUILD ONE TASK (<li>) ON THE PAGE =====
 // Creates a task (<li>) with its text and buttons, and adds it to the list
 function buildTask(text, completed, taskId, stat) {
@@ -391,6 +476,9 @@ taskList.addEventListener("click", async (event) => {
     tasks.splice(matchingIndex, 1);
     // Removes the task (<li>) from the page
     clickedTask.remove();
+    // Remembers the levels BEFORE the XP is added, to spot a level-up afterwards
+    const heroLevelBefore = levelFromXp(xp).level;
+    const statLevelBefore = levelFromXp(hero.statXp[completedStat]).level;
     // Adds one quest's XP to the total
     xp += xpPerQuest;
     // Saves the total under the key "xp"
@@ -401,6 +489,19 @@ taskList.addEventListener("click", async (event) => {
     hero.statXp[completedStat] += xpPerQuest;
     hero.questsDone += 1;
     saveHero();
+    // Compares the levels AFTER: any that went up gets a line in the level-up banner
+    const levelUps = [];
+    const heroLevelAfter = levelFromXp(xp).level;
+    const statLevelAfter = levelFromXp(hero.statXp[completedStat]).level;
+    if (heroLevelAfter > heroLevelBefore) {
+      levelUps.push("LEVEL UP! LV " + heroLevelAfter);
+    }
+    if (statLevelAfter > statLevelBefore) {
+      levelUps.push(completedStat + " LV " + statLevelAfter + "!");
+    }
+    if (levelUps.length > 0) {
+      showLevelUp(levelUps);
+    }
 
     //=======Xp Animation Effect========
     // make a new span in a box called xpFloat

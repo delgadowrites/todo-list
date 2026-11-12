@@ -265,7 +265,7 @@ body {
 #hero-name {
   font-size: 14px;
   color: var(--color-accent);
-  margin: 0 0 8px 0;
+  margin: 0;
   overflow-wrap: anywhere;
   /* very long names wrap instead of pushing the sheet wider */
 }
@@ -395,4 +395,144 @@ body {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* ===== LEVEL-UP FLASH ===== */
+
+.level-up-banner {
+  position: absolute;
+  /* placed relative to #xp-display, like the +XP float */
+  bottom: 100%;
+  left: 12px;
+  /* on the left, away from the +XP float on the right */
+  margin-bottom: 48px;
+  /* raised above the float's path, so they don't overlap on narrow phones */
+  background-color: var(--color-bg-2);
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  box-shadow: 4px 4px 0 var(--color-accent-3);
+  padding: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: left;
+  white-space: pre-line;
+  /* "\n" in the text starts a new line */
+  pointer-events: none;
+  animation: level-up-pop 2s forwards;
+}
+
+@keyframes level-up-pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  10% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  20% {
+    transform: scale(1);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.level-up-glow {
+  animation: level-up-glow 0.4s 3;
+  /* 0.4s glow, played 3 times */
+}
+
+@keyframes level-up-glow {
+  50% {
+    box-shadow: 0 0 12px 4px var(--color-accent);
+  }
+}
+
+/* People who turn on "reduce motion" get a simple fade instead of the pop.
+   (The glow stays: it changes color but doesn't move, and its animationend
+   is what takes the class off again.) */
+@media (prefers-reduced-motion: reduce) {
+  .level-up-banner {
+    animation-name: level-up-fade;
+  }
+}
+
+@keyframes level-up-fade {
+  0%,
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ===== RENAME THE HERO ===== */
+
+.sheet-header > div {
+  flex: 1;
+  /* the name side takes all the room next to the portrait */
+  min-width: 0;
+  /* lets it shrink so the rename box fits on phones */
+}
+
+#name-row,
+#rename-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#rename-form {
+  flex-wrap: wrap;
+  /* on narrow phones, Save drops to its own line so the box keeps its width */
+}
+
+/* display: flex above would beat the hidden attribute, so hidden needs its own rule */
+#name-row[hidden],
+#rename-form[hidden] {
+  display: none;
+}
+
+#rename-button,
+#rename-save {
+  font-family: inherit;
+  font-size: 10px;
+  background-color: var(--color-bg-2);
+  color: var(--color-accent-2);
+  border: 2px solid var(--color-accent-2);
+  padding: 4px 6px;
+  min-height: 32px;
+  flex-shrink: 0;
+  /* a long name can't squish the button */
+  cursor: pointer;
+}
+
+#rename-button:hover,
+#rename-save:hover {
+  background-color: var(--color-accent-2);
+  color: var(--color-bg-2);
+}
+
+#rename-input {
+  font-family: inherit;
+  font-size: 16px;
+  /* 16px stops iPhone Safari from zooming in */
+  background-color: var(--color-bg);
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  padding: 4px;
+  flex: 1 1 8em;
+  /* grows to fill the row; if it would be narrower than 8em, Save wraps below */
+  min-width: 0;
 }
