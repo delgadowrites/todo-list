@@ -385,6 +385,8 @@ taskList.addEventListener("click", async (event) => {
       event.target.disabled = false;
       return;
     }
+    // Reads which stat this task trains (before the object leaves the working list)
+    const completedStat = tasks[matchingIndex].stat;
     // Removes that object from the working list
     tasks.splice(matchingIndex, 1);
     // Removes the task (<li>) from the page
@@ -395,14 +397,18 @@ taskList.addEventListener("click", async (event) => {
     localStorage.setItem("xp", xp);
     // Shows the new total on the page
     showXp();
+    // Trains the hero: the task's stat gets the same XP, and the quest is counted
+    hero.statXp[completedStat] += xpPerQuest;
+    hero.questsDone += 1;
+    saveHero();
 
     //=======Xp Animation Effect========
     // make a new span in a box called xpFloat
     const xpFloat = document.createElement("span");
     // give xp float the class xp-float
     xpFloat.classList.add("xp-float");
-    // give xpFloat the text "+" + xpPerQuest + " XP"
-    xpFloat.textContent = "+" + xpPerQuest + " XP";
+    // give xpFloat the text "+15 XP · INT" (the XP, then the stat it trained)
+    xpFloat.textContent = "+" + xpPerQuest + " XP · " + completedStat;
     // Put xpFloat inside xpDisplay
     xpDisplay.appendChild(xpFloat);
     // Listen on xpFloat for the animationend event
