@@ -14,7 +14,27 @@ body {
   padding-bottom: 60px;
 }
 
+#task-form {
+  display: flex;
+  flex-wrap: wrap;
+  /* items flow onto new lines when they don't fit */
+  align-items: center;
+  gap: 8px;
+  /* one space between the label, the box and the buttons, across and down */
+}
+
+#task-form label {
+  flex-basis: 100%;
+  /* the label gets a whole line, so it always sits above the box */
+}
+
 #task-input {
+  flex: 1 1 100%;
+  /* takes a whole line on phones, pushing the buttons below it */
+  max-width: 480px;
+  /* on wider screens it stops here, and the buttons fit beside it */
+  box-sizing: border-box;
+  /* the width includes the border and padding, so it doesn't poke past the edge */
   font-family: inherit;
   background-color: var(--color-bg-2);
   color: var(--color-text);
@@ -61,18 +81,17 @@ body {
   color: var(--color-accent-2);
   margin: 6px;
   border: 2px solid var(--color-accent);
-  padding: 6px 6px 6px 52px;
-  /* top, right, bottom, left: 52px on the left makes room for the × */
+  padding: 6px 6px 6px 44px;
+  /* top, right, bottom, left: 44px on the left is exactly the × tap area,
+     so the badge sits right beside the × */
   font-size: 12px;
 
   display: flex;
   /* lay out the text and button in a row */
   align-items: center;
   /* center them vertically */
-  justify-content: space-between;
-  /* text on the left, button pushed to the right */
-  gap: 12px;
-  /* space between long text and the button */
+  gap: 8px;
+  /* space between the badge, the text and the button */
 }
 
 .remove-button {
@@ -455,9 +474,8 @@ body {
 }
 
 .stat-badge {
-  display: inline-block;
-  /* sits at the start of the task text, like a word */
-  margin-right: 8px;
+  flex-shrink: 0;
+  /* long task text can't squish the badge */
   color: var(--color-accent-2);
   border: 2px solid var(--color-accent-2);
   padding: 4px;
@@ -471,6 +489,10 @@ body {
   /* lets the text shrink in the row so overflow-wrap can do its job */
   overflow-wrap: break-word;
   /* only breaks a word that's too long for a whole line on its own */
+  text-align: center;
+  /* every line of text is centered between the badge and the button */
+  line-height: 1.5;
+  /* a little room between wrapped lines */
 }
 
 /* Hides a label on screen but keeps it for screen readers */

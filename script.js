@@ -389,16 +389,16 @@ function buildTask(text, completed, taskId, stat) {
   removeButton.textContent = "×";
   newTask.appendChild(removeButton);
   removeButton.setAttribute("aria-label", "Remove task");
+  // Creates the stat badge (like "INT") and puts it in the task (<li>) on its own,
+  // so wrapped task text stays in its own column instead of running under the badge
+  const statBadge = document.createElement("span");
+  statBadge.classList.add("stat-badge");
+  statBadge.textContent = stat;
+  newTask.appendChild(statBadge);
   // Creates the <span> that holds the task's text, and puts it in the task (<li>)
   const spanWrapper = document.createElement("span");
   spanWrapper.classList.add("task-text");
   spanWrapper.textContent = text;
-  // Creates the stat badge (like "INT") and puts it at the start of the text,
-  // so the badge and text wrap together and the text keeps the full width on phones
-  const statBadge = document.createElement("span");
-  statBadge.classList.add("stat-badge");
-  statBadge.textContent = stat;
-  spanWrapper.prepend(statBadge);
   newTask.appendChild(spanWrapper);
   // Creates the "complete" button, and puts it in the task (<li>)
   const completeButton = document.createElement("button");
